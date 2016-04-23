@@ -55,9 +55,9 @@ def registerPlayer(name):
     conn.commit()
     conn.close()
 
+registerPlayer("Thinktop Thoriyoki")
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
-
     The first entry in the list should be the player in first place, or a player
     tied for first place if there is currently a tie.
 
@@ -77,6 +77,13 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    conn = connect()
+    c = conn.cursor()
+    c.execute("INSERT INTO matches VALUES (%s, %s)", (winner, "win",))
+    c.execute("INSERT INTO matches VALUES (%s, %s)", (loser, "loss"))
+    conn.commit()
+    conn.close()
+
 
 
 def swissPairings():
