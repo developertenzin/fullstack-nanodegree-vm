@@ -16,7 +16,7 @@ CREATE TABLE players(
 );
 
 CREATE TABLE matches(
-  ID serial,
+  ID serial references players,
   Outcome text
 );
 
@@ -30,7 +30,10 @@ INSERT INTO players (name) VALUES
 
 SELECT * FROM players;
 
-INSERT INTO matches VALUES (1, 'win');
+
+# INSERT INTO matches VALUES (1, 'win');
+SELECT * FROM matches;
+/*
 INSERT INTO matches VALUES (1, 'win');
 INSERT INTO matches VALUES (1, 'win');
 INSERT INTO matches VALUES (1, 'loss');
@@ -45,7 +48,7 @@ INSERT INTO matches VALUES (3, 'win');
 
 INSERT INTO matches VALUES (5, 'win');
 INSERT INTO matches VALUES (5, 'win');
-
+*/
 SELECT * FROM matches;
 
 SELECT players.id, players.name, matches.Outcome
@@ -71,7 +74,10 @@ JOIN (
     ON players.id = matches.id
   ) as combo GROUP BY combo.id, combo.name
 ) as nm
-ON inw.id = nm.id;
+ON inw.id = nm.id
+ORDER BY inw.num_of_wins
+;
+
 
 
 

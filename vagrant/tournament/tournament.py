@@ -38,8 +38,6 @@ def countPlayers():
     number_of_players = c.fetchone()[0]
     return number_of_players
 
-print(countPlayers())
-
 def registerPlayer(name):
     """Adds a player to the tournament database.
 
@@ -55,7 +53,6 @@ def registerPlayer(name):
     conn.commit()
     conn.close()
 
-registerPlayer("Thinktop Thoriyoki")
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
     The first entry in the list should be the player in first place, or a player
@@ -68,6 +65,35 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    conn = connect()
+    c = conn.cursor()
+    c.execute(
+    "SELECT inw.id, inw.name, inw.num_of_wins, nm.num_of_matches FROM (\
+          SELECT winners.id, winners.name, count(*) as num_of_wins FROM (\
+            SELECT demo.id, demo.name, demo.outcome FROM (\
+              SELECT players.id, players.name, matches.Outcome\
+              FROM players\
+              JOIN matches\
+              ON players.id = matches.id\
+            ) as demo where demo.outcome = 'win'\
+          ) as winners GROUP BY winners.id, winners.name\
+        ) as inw\
+        JOIN (\
+          SELECT combo.id, combo.name, count(*) as num_of_matches FROM (\
+            SELECT players.id, players.name, matches.Outcome\
+            FROM players\
+            JOIN matches\
+            ON players.id = matches.id\
+          ) as combo GROUP BY combo.id, combo.name\
+        ) as nm\
+        ON inw.id = nm.id\
+        ORDER BY inw.num_of_wins\
+        ;"
+    )
+    player_standings_details = c.fetchall()
+    conn.close()
+
+    return player_standings_details
 
 
 def reportMatch(winner, loser):
@@ -101,3 +127,6 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+
+if __name__ == "__main__":
+    registerPlayer("Thinktop Thoriyoki")
