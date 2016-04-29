@@ -15,78 +15,41 @@ CREATE TABLE players(
   Name text
 );
 
+
 CREATE TABLE matches(
-  ID serial references players,
-  Outcome text
+  player_id serial references players,
+  Result int
 );
 
-
-INSERT INTO players (name) VALUES
-  ('Tenzin Phuljung'),
-  ('Rafeh Qazi'),
-  ('Alvaro Font'),
-  ('Thinktop Thoriyoki'),
-  ('Conor Mcgregor');
+INSERT INTO players (Name) VALUES
+('Tenzin'),
+('Qazi'),
+('Illya'),
+('Matthew');
 
 SELECT * FROM players;
 
+INSERT INTO matches (player_id, Result) VALUES
+(1, 1),
+(3, 1),
+(2, 0),
+(4, 0),
+(1, 1);
 
-# INSERT INTO matches VALUES (1, 'win');
-SELECT * FROM matches;
-/*
-INSERT INTO matches VALUES (1, 'win');
-INSERT INTO matches VALUES (1, 'win');
-INSERT INTO matches VALUES (1, 'loss');
-
-INSERT INTO matches VALUES (3, 'win');
-INSERT INTO matches VALUES (3, 'win');
-INSERT INTO matches VALUES (3, 'win');
-INSERT INTO matches VALUES (3, 'win');
-INSERT INTO matches VALUES (3, 'win');
-INSERT INTO matches VALUES (3, 'win');
-
-
-INSERT INTO matches VALUES (5, 'win');
-INSERT INTO matches VALUES (5, 'win');
-*/
 SELECT * FROM matches;
 
-SELECT players.id, players.name, matches.Outcome
-FROM players
-JOIN matches
-ON players.id = matches.id;
-
-SELECT inw.id, inw.name, inw.num_of_wins, nm.num_of_matches FROM (
-  SELECT winners.id, winners.name, count(*) as num_of_wins FROM (
-    SELECT demo.id, demo.name, demo.outcome FROM (
-      SELECT players.id, players.name, matches.Outcome
-      FROM players
-      JOIN matches
-      ON players.id = matches.id
-    ) as demo where demo.outcome = 'win'
-  ) as winners GROUP BY winners.id, winners.name
-) as inw
-JOIN (
-  SELECT combo.id, combo.name, count(*) as num_of_matches FROM (
-    SELECT players.id, players.name, matches.Outcome
-    FROM players
-    JOIN matches
-    ON players.id = matches.id
-  ) as combo GROUP BY combo.id, combo.name
-) as nm
-ON inw.id = nm.id
-ORDER BY inw.num_of_wins
-;
-
-
-
-
-
-/*SELECT combo.id, combo.name, count(*) as num_of_matches FROM (
-  SELECT players.id, players.name, matches.Outcome
+CREATE VIEW player_standings as
+  SELECT id ,
+     name,
+     count(CASE result WHEN 1 THEN 1 END) as wins,
+     count(player_id) as matches
   FROM players
-  JOIN matches
-  ON players.id = matches.id
-) as combo GROUP BY combo.id, combo.name;*/
+    LEFT OUTER JOIN matches
+      ON players.id = matches.player_id
+      GROUP BY id
+      order by wins desc;
+
+SELECT * FROM player_standings;
+
 
 \c vagrant;

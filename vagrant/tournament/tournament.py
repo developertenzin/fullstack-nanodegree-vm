@@ -68,27 +68,14 @@ def playerStandings():
     conn = connect()
     c = conn.cursor()
     c.execute(
-    "SELECT inw.id, inw.name, inw.num_of_wins, nm.num_of_matches FROM (\
-          SELECT winners.id, winners.name, count(*) as num_of_wins FROM (\
-            SELECT demo.id, demo.name, demo.outcome FROM (\
-              SELECT players.id, players.name, matches.Outcome\
-              FROM players\
-              JOIN matches\
-              ON players.id = matches.id\
-            ) as demo where demo.outcome = 'win'\
-          ) as winners GROUP BY winners.id, winners.name\
-        ) as inw\
-        JOIN (\
-          SELECT combo.id, combo.name, count(*) as num_of_matches FROM (\
-            SELECT players.id, players.name, matches.Outcome\
-            FROM players\
-            JOIN matches\
-            ON players.id = matches.id\
-          ) as combo GROUP BY combo.id, combo.name\
-        ) as nm\
-        ON inw.id = nm.id\
-        ORDER BY inw.num_of_wins\
-        ;"
+    "SELECT players.id,\
+       players.name,\
+       count(CASE matches.result WHEN 1 THEN 1 END) as wins,\
+       count(matches.player_id) as matches\
+    FROM players\
+      LEFT OUTER JOIN matches\
+        ON players.id = matches.player_id\
+        GROUP BY players.id;"
     )
     player_standings_details = c.fetchall()
     conn.close()
@@ -105,8 +92,8 @@ def reportMatch(winner, loser):
     """
     conn = connect()
     c = conn.cursor()
-    c.execute("INSERT INTO matches VALUES (%s, %s)", (winner, "win",))
-    c.execute("INSERT INTO matches VALUES (%s, %s)", (loser, "loss"))
+    c.execute("INSERT INTO matches VALUES (%s, %s)", (winner, 1))
+    c.execute("INSERT INTO matches VALUES (%s, %s)", (loser, 0))
     conn.commit()
     conn.close()
 
@@ -127,6 +114,14 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-
-if __name__ == "__main__":
-    registerPlayer("Thinktop Thoriyoki")
+    conn = connect()
+    c = conn.cursor()
+    c.execute("SELECT id, name from player_standings")
+    result = c.fetchall()
+    final = []
+    count = 0
+    for i in range(len(result)/2):
+        final.append(result[count] + result[count+1])
+        count += 2
+    conn.close()
+    return final
