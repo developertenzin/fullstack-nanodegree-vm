@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql import func
-
+import datetime
 #from database_setup import Restaurant, Base, MenuItem
 #engine = create_engine('sqlite:///restaurantmenu.db')
 from animal_shelter import Shelter, Puppy, Base
@@ -29,7 +28,11 @@ all_puppies = session.query(Puppy).all()
 
 acs_pups = session.query(Puppy).order_by(Puppy.name.asc())
 
-infants = session.query(Puppy).filter_by(Puppy.dateOfBirth > '2015-10-01').order_by(Puppy.dateOfBirth)
+current_time = datetime.datetime.utcnow()
+six_months_ago = current_time - datetime.timedelta(weeks=26)
+
+infants = session.query(Puppy).filter_by(Puppy.dateOfBirth > six_months_ago).all()
+
 
 
 

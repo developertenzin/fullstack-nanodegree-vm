@@ -17,6 +17,7 @@ class Shelter(Base):
     website = Column(String(250), nullable=False)
     id = Column(Integer, primary_key=True)
 
+
 class Puppy(Base):
     __tablename__ = 'puppy'
     name = Column(String(80), nullable=False)
