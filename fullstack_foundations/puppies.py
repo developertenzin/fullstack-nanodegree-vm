@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 Base = declarative_base()
 
 class Shelter(Base):
-    __tablename__ = 'shelter'
+    __tablename__ = 'shelters'
     id = Column(Integer, primary_key = True)
     name =Column(String(80), nullable = False)
     address = Column(String(250))
@@ -16,7 +16,7 @@ class Shelter(Base):
     website = Column(String)
     
 class Puppy(Base):
-    __tablename__ = 'puppy'
+    __tablename__ = 'puppies'
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
     gender = Column(String(6), nullable = False)

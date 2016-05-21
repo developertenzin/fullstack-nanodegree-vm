@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 import datetime
 #from database_setup import Restaurant, Base, MenuItem
@@ -24,22 +24,19 @@ session = DBSession()
 #print(session.query(MenuItem).all())
 #database = session.query(MenuItem).all()
 
-all_puppies = session.query(Puppy).all()
+# 1: Puppies ordered alphabetically
+acs_pups = session.query(Puppy).order_by(Puppy.name.asc()).all()
 
-acs_pups = session.query(Puppy).order_by(Puppy.name.asc())
-
+# 2: Puppies younger than six months ordered by birthdate
 current_time = datetime.datetime.utcnow()
 six_months_ago = current_time - datetime.timedelta(weeks=26)
+infants = session.query(Puppy).filter(Puppy.dateOfBirth < six_months_ago).order_by(Puppy.dateOfBirth.asc()).all()
 
-infants = session.query(Puppy).filter_by(Puppy.dateOfBirth > six_months_ago).all()
+# 3: Puppies ordered by weight
+puppies_by_weight = session.query(Puppy).order_by(Puppy.weight.asc()).all()
 
-
-
-
-
-
-#for item in database:
-#    print(item.name, item.id)
-
-
-
+# 4: Puppies grouped by their shelters
+puppies_by_shelterID = session.query(Puppy).group_by(Puppy.shelter_id).all()
+puppies_by_shelterID2 = session.query(func.count(Puppy.name)).group_by(Puppy.shelter_id).all()
+for i in puppies_by_shelterID2:
+    print(i)
