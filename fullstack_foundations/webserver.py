@@ -28,6 +28,7 @@ class webserverHandler(BaseHTTPRequestHandler):
                 <h2>What would you like me to say?</h2><input name='message' type='text'> <input type='submit' \
                  value='Submit'> </form>"
                 output += "</body></html>"
+
                 self.wfile.write(bytes(output, "utf-8"))
                 print(output)
                 return
