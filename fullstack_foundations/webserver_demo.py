@@ -34,7 +34,7 @@ class webserverHandler(BaseHTTPRequestHandler):
                 return
 
             if self.path.endswith("/edit"):
-                restaurant_id = self.path.split("/")[1]
+                restaurant_id = self.path.split("/")[2]
                 current_restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
                 if current_restaurant:
                     self.send_response(200)
@@ -54,7 +54,7 @@ class webserverHandler(BaseHTTPRequestHandler):
                     return
 
             if self.path.endswith("/delete"):
-                restaurant_id = self.path.split("/")[1]
+                restaurant_id = self.path.split("/")[2]
                 current_restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
                 if current_restaurant:
                     self.send_response(200)
@@ -64,7 +64,6 @@ class webserverHandler(BaseHTTPRequestHandler):
                     output += "<html><body>"
                     output += "<form method='POST' enctype='multipart/form-data' action='restaurants/%s/delete'>" % restaurant_id
                     output += "Are you sure you want to delete %s?" % current_restaurant.name
-                    output += "<input type = 'hidden' name = 'country' value = 'Norway'>"
                     output += "<input type='submit' value = 'delete'>"
                     output += "</form>"
                     output += "</body></html>"
@@ -78,14 +77,12 @@ class webserverHandler(BaseHTTPRequestHandler):
 
                 output = ""
                 output += "<html><body>"
-                restaurants = session.query(Restaurant.name).all()
-                count = 1
+                restaurants = session.query(Restaurant).all()
                 for restaurant in restaurants:
-                    output += "<p> %s <p>" % restaurant
-                    output += "<a href='%i/edit'>Edit</a><br>" % count
-                    output += "<a href='%i/delete'>Delete</a>" % count
+                    output += "<p> %s <p>" % restaurant.name
+                    output += "<a href='/restaurants/%s/edit'>Edit</a><br>" % restaurant.id
+                    output += "<a href='/restaurants/%s/delete'>Delete</a>" % restaurant.id
                     output += "<div style='margin-bottom: 50px'></div>"
-                    count += 1
 
                 output += "<a href='/restaurants/new'> Create A New Restaurant </a>"
                 output += "</body></html>"
@@ -107,7 +104,6 @@ class webserverHandler(BaseHTTPRequestHandler):
                 output += "</body></html>"
 
                 self.wfile.write(bytes(output, "utf-8"))
-                print(output)
                 return
 
             if self.path.endswith("/restaurants/new"):
@@ -124,7 +120,6 @@ class webserverHandler(BaseHTTPRequestHandler):
                 output += "</form>"
                 output += "</body></html>"
                 self.wfile.write(bytes(output, "utf-8"))
-                print(output)
                 return
 
         except IOError:
@@ -141,9 +136,8 @@ class webserverHandler(BaseHTTPRequestHandler):
                 post_data = self.rfile.read(int(length))
                 post_data = str(post_data,'utf-8')
                 content = post_data.split("\n")[3]
-                restaurant_id = self.path.split("/")[1]
+                restaurant_id = self.path.split("/")[2]
                 current_restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-
                 current_restaurant.name = content
                 session.add(current_restaurant)
                 session.commit()
@@ -154,6 +148,11 @@ class webserverHandler(BaseHTTPRequestHandler):
                 self.send_header('Content-type', 'text/html')
                 self.send_header('Location', '/restaurants')
                 self.end_headers()
+                restaurant_id = self.path.split('/')[2]
+                current_restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+                session.delete(current_restaurant)
+                session.commit()
+                return
 
             if self.path.endswith("/restaurants/new"):
                     self.send_response(301)
