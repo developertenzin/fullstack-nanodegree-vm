@@ -20,7 +20,6 @@ session = DBSession()
 
 # Menu for UrbanBurger
 restaurant1 = Restaurant(name="Urban Burger")
-
 session.add(restaurant1)
 session.commit()
 
