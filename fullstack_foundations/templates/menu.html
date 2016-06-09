@@ -9,7 +9,7 @@
                     <h1>{{restaurant.name}}</h1>
                 </div>
                 <div class="newMenuItem">
-                    <button id="createNewMenuItem"><a href='{{ url_for("newMenuItem", restaurant_id = restaurant.id)}}'>Create New Menu Item</a></button>
+                    <a class="createNewMenuLink" href='{{ url_for("newMenuItem", restaurant_id = restaurant.id)}}'><button id="createNewMenuItem">Create New Menu Item</button></a>
                 </div>
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
@@ -21,16 +21,21 @@
                 {% endif %}
                 {% endwith %}
 
+                <div class="menuItemLists">
                 {% for i in items %}
-                <div>
-                    <p>{{i.name}}</p>
-                    <p>{{i.description}}</p>
-                    <p> {{i.price}} </p>
-                    <a href= '{{ url_for("editMenuItem", restaurant_id = restaurant.id, menu_id = i.id) }}'>Edit</a><br>
-                    <a href='{{ url_for("deleteMenuItem", restaurant_id = restaurant.id, menu_id = i.id) }}'>Delete</a>
+                    <div class="detailsDiv">
+                        <h3 id="menuItemName">{{i.name}}</h3>
+                        <p>{{i.description}}</p>
+                        <p> {{i.price}} </p>
+                    </div>
+                    <div class="editDeleteButtonsDiv">
+                        <a  href= '{{ url_for("editMenuItem", restaurant_id = restaurant.id, menu_id = i.id) }}'>
+                            <img class="actionImages" src="{{ url_for('static', filename='images/edit.png') }}" alt="" width="25" height="25"></a>
+                        <a href='{{ url_for("deleteMenuItem", restaurant_id = restaurant.id, menu_id = i.id) }}'><img class="actionImages" src="{{ url_for('static', filename='images/trash.png') }}" alt="" width="25" height="25"></a>
+                    </div>
                     <br>
-                </div>
                 {% endfor %}
+                </div>
             </div>
         </div>
     </body>

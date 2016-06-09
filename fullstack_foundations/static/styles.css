@@ -1,7 +1,9 @@
 body {
     font-family: sans-serif;
     background-image: url('img3.jpg');
-    background-color: #FFFFFF;
+    background-color: #E8E8EA;
+    margin: 0;
+    padding: 0;
 }
 
 h1, h2, h3, h4 {
@@ -9,13 +11,11 @@ h1, h2, h3, h4 {
     font-family: "Myriad Pro";
 }
 
-h1, h2 {
-    font-family: 'Georgia', serif;
-    margin: 0;
-}
-
 h1 {
     border-bottom: 2px solid #eee;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 300;
+    color: #5C5C5D;
 }
 
 h2 {
@@ -24,7 +24,7 @@ h2 {
 
 .top-header {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 24px;
 }
 
 .newMenuItem {
@@ -32,32 +32,46 @@ h2 {
     text-align: center;
 }
 
+#menuItemName {
+    font-family: "PT Sans", sans-serif;
+    color: #5C5C5D;
+}
+
+.createNewMenuLink {
+}
+
 #createNewMenuItem {
     display: inline-block;
     margin: 0 10px 0 0;
     padding: 10px 10px;
-    font-size: 40px;
-    font-family: "Bitter",serif;
+    font-size: 25px;
+    font-family: "PT Sans", sans-serif;
+    font-weight: 300;
     line-height: 1;
     box-shadow: none;
     border-radius: 8px;
-    background: #33343D;
     color: #FFFFFF;
+    background: #33343D;
     outline-style: none;
-    border: none;
+    border: 3px solid slategray;
+    margin-bottom: 25px;
+}
+
+#createNewMenuItem:hover {
+    background: white;
+    color: black;
+    cursor: pointer;
 }
 
 .main {
-    width: 80%;
+    max-width: 1000px;
     margin: 0 auto;
-    max-width: 800px;
 }
 
-.container {
-}
-
-p, dd, dt {
-    color: #CCCCCC;
+.actionImages {
+    margin-top: 12px;
+    border-radius: 4px;
+    margin-left: 8px;
 }
 
 a {
@@ -65,4 +79,26 @@ a {
     font-size: .75em;
 }
 
+.menuItemLists {
+    margin: 0 auto;
+    text-align: auto;
+}
+
+.detailsDiv {
+    width: 70%;
+    float:left;
+}
+
+.editDeleteButtonsDiv {
+    width: 10%;
+    float:right;
+    line-height: 50px;
+}
+
+p {
+    font-family: "PT Sans", sans-serif;
+    font-weight: 100;
+    font-size: 20px;
+    color: #959595;
+}
 
