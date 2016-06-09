@@ -1,11 +1,16 @@
 <html>
     <head>
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     </head>
     <body>
         <div class="main">
             <div class="container">
-                <h1>{{restaurant.name}}</h1>
-                <a href='{{ url_for("newMenuItem", restaurant_id = restaurant.id)}}'>Create New Menu Item</a>
+                <div class="top-header">
+                    <h1>{{restaurant.name}}</h1>
+                </div>
+                <div class="newMenuItem">
+                    <button id="createNewMenuItem"><a href='{{ url_for("newMenuItem", restaurant_id = restaurant.id)}}'>Create New Menu Item</a></button>
+                </div>
                 {% with messages = get_flashed_messages() %}
                 {% if messages %}
                 <ul>
